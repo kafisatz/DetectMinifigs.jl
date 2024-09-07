@@ -2,3 +2,4 @@
 model/yolov8x.onnx
 model/*.onnx
 model/*.pt
+.vscode/settings.json
