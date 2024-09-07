@@ -3,6 +3,7 @@ print(os.getcwd())
 
 pt = os.getcwd()
 savepath = os.path.join(pt, 'model')
+os.makedirs(savepath, exist_ok=True)
 os.chdir(savepath)
 print(os.getcwd())
 
@@ -14,4 +15,4 @@ else:
     from ultralytics import YOLO
     print("creating onnx model file: ", filename_onnx)
     model = YOLO("yolov8x.pt")
-    model.export(format="onnx")
+    model.export(format="onnx",conf=0.01)

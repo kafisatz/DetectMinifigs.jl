@@ -1,6 +1,7 @@
 #docker pull ultralytics/ultralytics
 
 yolo predict model=yolov8x.pt iou=0.1 conf=0.01 classes=0 save_crop=True source="C:\Users\bernhard.koenig\OneDrive - K\Dateien\Lego\minifigs\20240906.jpg"
+
 #conf	float	0.25	Sets the minimum confidence threshold for detections. Objects detected with confidence below this threshold will be disregarded. Adjusting this value can help reduce false positives.
 #iou	float	0.7	Intersection Over Union (IoU) threshold for Non-Maximum Suppression (NMS). Lower values result in fewer detections by eliminating overlapping boxes, useful for reducing duplicates.
 
@@ -8,22 +9,3 @@ yolo predict model=yolov8x.pt iou=0.1 conf=0.01 classes=0 save_crop=True source=
 #model.predict(source="0", show=True, stream=True, classes=0)  # [0, 3, 5] for multiple classes
 
 #https://docs.ultralytics.com/modes/predict/#inference-arguments
-
-
-#yolo
-
-
-#old stuff
-#yolov5
-#docker run --ipc=host -it -v c:\users\bernhard.koenig\datasets:/usr/src/datasets ultralytics/yolov5:latest 
-#docker run --ipc=host -it -v c:\users\bernhard.koenig\datasets:/usr/src/datasets  -v c:\users\bernhard.koenig\detect:/usr/src/app/runs/detect ultralytics/yolov5:latest 
-#python detect.py --source /usr/src/datasets/ --conf 0.019 --save-crop
-#python detect.py --source /usr/src/datasets/ -save-crop
-
-#detection models 
-#increasing complexity
-#yolov8n.pt yolov8s.pt yolov8m.pt yolov8l.pt yolov8x.pt
-
-#model=yolov8n.pt
-#yolo predict model=yolov8x.pt source='https://ultralytics.com/images/bus.jpg'
-

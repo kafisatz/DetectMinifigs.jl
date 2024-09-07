@@ -1,34 +1,10 @@
 module DetectMinifigs
 
-using Images; using ONNXRunTime;using Genie;using Genie.Router;using Genie.Requests;using Genie.Renderer.Json; using JSON3
-using libwebp_jll
-using Downloads
+using Images; using ONNXRunTime;using Genie;using Genie.Router;using Genie.Requests;using Genie.Renderer.Json
 
 export mdl_path
 mdl_path = normpath(joinpath(@__DIR__,"..","model","yolov8x.onnx"))
 #isfile(mdl_path)
-
-export brickognize 
-function brickognize(fi)
-    @assert isfile(fi)
-    #s flag is for silent -> suppress progress bar
-    cmd = `curl -s -X 'POST' https://api.brickognize.com/predict/figs/ -H 'accept: application/json' -H 'Content-Type: multipart/form-data' -F "query_image=@$fi;type=image/jpeg"`
-    rs = read(pipeline(cmd));
-    js = JSON3.read(rs)
-
-
-    #run with pipeline
-    #rs = run(pipeline(cmd,stdout=Base.DevNull()));
-    #out = IOBuffer()
-    #rs = run(pipeline(cmd,stdout=out));
-    #out = IOBuffer()
-    #rs = run(pipeline(cmd,stdout=out));
-    #read(out,String)
-    #rs = read(cmd,String,stdout=Base.DevNull())) #prints to console
-    
-return js
-end
-
 
 # Main function, starts the web server
 export main 
@@ -198,74 +174,4 @@ end
 
 #main(mdl_path)
 
-export download_webp_to_image
-function download_webp_to_image(url)
-    webp = Downloads.download(url)
-    png = splitext(webp)[1] * ".png"
-    libwebp_jll.dwebp() do dwebp
-        run(`$dwebp -quiet $webp -o $png`)
-    end
-    img = load(png)
-    rm(webp)
-    rm(png)
-
-    #save(raw"C:\temp\abc.png",img)
-    #download_webp_to_image(url)
-    #save(raw"C:\temp\abc.png",img)
-    return img
 end
-
-
-export concatenate_images
-function concatenate_images(img,matchedimg)
-    h1,w1 = size(img)
-    h2,w2 = size(matchedimg)
-
-    #align width
-    #make smaller image wider
-    if w1 == w2 
-        return vcat(img,matchedimg)
-    end
-    
-    new_width = max(w1,w2)
-    if new_width == w2
-        percentage_scale = w2 / w1
-        new_size = trunc.(Int, size(img) .* percentage_scale)
-        new_size = (new_size[1], w2) #second dim must be w2!
-        img_rescaled = imresize(img, new_size)
-        return vcat(img_rescaled,matchedimg)
-    else
-        percentage_scale = w1 / w2
-        new_size = trunc.(Int, size(matchedimg) .* percentage_scale)
-        new_size = (new_size[1], w1) #second dim must be w1!
-        img_rescaled = imresize(matchedimg, new_size)
-        return vcat(img,img_rescaled)
-    end
-
-return nothing 
-end
-
-export brickognize_process_file
-function brickognize_process_file(fi,outputdir)
-    @assert isdir(outputdir)
-    #println(fi)
-    js = brickognize(fi)
-    nitems = size(js.items,1)
-    item = js.items[1]
-    img_url = item.img_url
-    score = item.score
-    println(score)
-
-    @assert endswith(img_url,".webp")
-    matchedimg = download_webp_to_image(img_url)
-    #save(raw"C:\temp\abc.png",img)
-
-    img = Images.load(fi)
-    img_concatenated = concatenate_images(img, matchedimg)
-    pt = joinpath(outputdir,"score_$(round(score*100)).png")
-    save(pt,img_concatenated)    
-    return nothing 
-end
-
-
-end #end Module
