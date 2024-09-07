@@ -12,14 +12,16 @@ nitems = size(js.items,1)
 js.items[1]
 
 
-
+#score of 50 seems OK, generally
 fldr = raw"C:\Users\bernhard.koenig\runs\detect\predict14\crops\person"
 fis = readdir(fldr)
 @show tmpdr = mktempdir()
 count = 0
+sz = size(fis,1)
 for firel in fis
-    @show count+=1
+    count+=1
+    @show count/sz
     fi = joinpath(fldr, firel)
-    brickognize_process_file(fi,tmpdr)
+    rs = brickognize_process_file(fi,tmpdr)
 end
 

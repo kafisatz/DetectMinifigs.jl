@@ -249,6 +249,7 @@ export brickognize_process_file
 function brickognize_process_file(fi,outputdir)
     @assert isdir(outputdir)
     #println(fi)
+    fnonly = splitdir(fi)[2]
     js = brickognize(fi)
     nitems = size(js.items,1)
     item = js.items[1]
@@ -262,7 +263,7 @@ function brickognize_process_file(fi,outputdir)
 
     img = Images.load(fi)
     img_concatenated = concatenate_images(img, matchedimg)
-    pt = joinpath(outputdir,"score_$(round(score*100)).png")
+    pt = joinpath(outputdir,"score_$(round(score*100))_$(fnonly).png")
     save(pt,img_concatenated)    
     return nothing 
 end
