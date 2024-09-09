@@ -15,14 +15,12 @@ js.items[1]
 
 #score of 50 seems OK, generally
 fldr = raw"C:\Users\bernhard.koenig\runs\detect\predict14\crops\person"
-fis = readdir(fldr)
 @show outputdir = mktempdir(raw"C:\temp")
-count = 0
-sz = size(fis,1)
-for firel in fis
-    count+=1
-    fi = joinpath(fldr, firel)
-    @show fi
-    @show count/sz
-    id,name,score,js = brickognize_process_file(fi,outputdir);
-end
+brickognize_folder(fldr,outputdir)
+
+fis = readdir(fldr)
+@time brickognize_folder(fldr,outputdir)
+
+#=
+id,name,score,js = brickognize_process_file(fi,outputdir);
+=#

@@ -305,7 +305,9 @@ function add_text_to_image(img_concatenated_wo_text,txt1,txt2)
     yv = collect(1:size(txtv,1)) .* -0.006
     GMT.text(txtv, x=xv,y=yv,N=true,justify=:CM, fmt=:png, frame=:none, show=true,name=fi2)
 =#
+
     #description 
+    #split text by - and ,
     txtv = split(txt2," - ") 
     txtv = vcat(split.(txtv,", ")...)
     txtv = string.(txtv)
@@ -361,5 +363,20 @@ function add_text_to_image(img_concatenated_wo_text,txt1,txt2)
     return img
 end
 
+
+export brickognize_folder
+function brickognize_folder(fldr,outputdir)
+
+count = 0
+sz = size(fis,1)
+for firel in fis
+    count+=1
+    fi = joinpath(fldr, firel)
+    @show fi
+    @show count/sz
+    id,name,score,js = brickognize_process_file(fi,outputdir);
+end
+return nothing 
+end
 
 end #end Module

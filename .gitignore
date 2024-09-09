@@ -5,3 +5,4 @@ model/*.pt
 .vscode/settings.json
 gmt.history
 *.eps
+*.bb
