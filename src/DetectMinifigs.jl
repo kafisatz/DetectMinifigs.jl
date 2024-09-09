@@ -366,7 +366,7 @@ end
 
 export brickognize_folder
 function brickognize_folder(fldr,outputdir)
-
+    fis = readdir(fldr)
 count = 0
 sz = size(fis,1)
 for firel in fis

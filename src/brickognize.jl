@@ -18,7 +18,7 @@ fldr = raw"C:\Users\bernhard.koenig\runs\detect\predict14\crops\person"
 @show outputdir = mktempdir(raw"C:\temp")
 brickognize_folder(fldr,outputdir)
 
-fis = readdir(fldr)
+
 @time brickognize_folder(fldr,outputdir)
 
 #=
