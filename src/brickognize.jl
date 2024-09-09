@@ -19,7 +19,6 @@ fldr = joinpath(userhome,raw"runs\detect\predict14\crops\person")
 @show outputdir = mktempdir(raw"C:\temp")
 brickognize_folder(fldr,outputdir)
 
-
 @time brickognize_folder(fldr,outputdir)
 #152 seconds for 128 images
 #=
