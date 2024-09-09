@@ -1,6 +1,6 @@
 #docker pull ultralytics/ultralytics
 
-yolo predict model=yolov8x.pt iou=0.1 conf=0.01 classes=0 save_crop=True source="C:\Users\bernhard.koenig\OneDrive - K\Dateien\Lego\minifigs\20240906.jpg"
+yolo predict model=yolov8x.pt iou=0.1 conf=0.01 classes=0 save_crop=True source="20240906.jpg"
 
 #conf	float	0.25	Sets the minimum confidence threshold for detections. Objects detected with confidence below this threshold will be disregarded. Adjusting this value can help reduce false positives.
 #iou	float	0.7	Intersection Over Union (IoU) threshold for Non-Maximum Suppression (NMS). Lower values result in fewer detections by eliminating overlapping boxes, useful for reducing duplicates.

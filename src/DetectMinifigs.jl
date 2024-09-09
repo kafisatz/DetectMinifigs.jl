@@ -42,7 +42,7 @@ function main(mdl_path)
     end 
 
     #yolo parameters
-    #iou=0.1 conf=0.01 classes=0 save_crop=True source="C:\Users\bernhard.koenig\OneDrive - K\Dateien\Lego\minifigs\20240906.jpg"
+    #iou=0.1 conf=0.01 classes=0 save_crop=True source="fld\Lego\minifigs\20240906.jpg"
     yolo_settings = (iou=0.1, conf=0.01, classes=0, save_crop=true)
 
     # handle /detect POST requests: receive an image from frontend
