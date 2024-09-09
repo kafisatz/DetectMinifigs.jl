@@ -4,3 +4,4 @@ model/*.onnx
 model/*.pt
 .vscode/settings.json
 gmt.history
+*.eps

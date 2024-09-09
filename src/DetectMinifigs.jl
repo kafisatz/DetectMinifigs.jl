@@ -283,10 +283,11 @@ end
 
 export add_text_to_image
 function add_text_to_image(img_concatenated_wo_text,txt1,txt2)
-    #txt1 = item.id
-    #txt2 = item.name
+    #=
+        txt1 = item.id
+        txt2 = item.name
+    =#
     #txt = text1 * "\r\n" * text2
-    #img = img_concatenated
 
     #craete text
         tmpdir = mktempdir()
@@ -294,16 +295,20 @@ function add_text_to_image(img_concatenated_wo_text,txt1,txt2)
         fi2 = joinpath(tmpdir,"txt2.png")
         fi3 = joinpath(tmpdir,"txt3.png")
         show_pics = false
-        img1 = GMT.text([txt1], x=0,y=0, font=(40,:black), justify=:CM, fmt=:png, frame=:none, show=show_pics,name=fi1)
-        img2 = GMT.text([txt2], x=0,y=0, font=(20,:black), justify=:CM, fmt=:png, frame=:none, show=show_pics,name=fi2)
+        GMT.text([txt1], x=0,y=0, font=(40,:black), justify=:CM, fmt=:png, frame=:none, show=show_pics,name=fi1)        
+
         if occursin(" - ", txt2)
             txt2a,txt2b = split(txt2," - ")
             txt2a = string(txt2a)
             txt2b = string(txt2b)
-            img2a = GMT.text([txt2a], x=0,y=0, font=(20,:black), justify=:CM, fmt=:png, frame=:none, show=show_pics,name=fi2)
-            img2b = GMT.text([txt2b], x=0,y=0, font=(20,:black), justify=:CM, fmt=:png, frame=:none, show=show_pics,name=fi3)
-            img2 = concatenate_images(load(fi2),load(fi3))
-            save(fi2,img2)
+            GMT.text([txt2a,txt2b], x=[0,0],y=[0.003,-0.003],N=true,justify=:CM, fmt=:png, frame=:none, show=show_pics,name=fi2)
+            #=
+                img2a = GMT.text([txt2a], x=0,y=0, font=(20,:black), justify=:CM, fmt=:png, frame=:none, show=show_pics,name=fi2)
+                img2b = GMT.text([txt2b], x=0,y=0, font=(20,:black), justify=:CM, fmt=:png, frame=:none, show=show_pics,name=fi3)
+                img2 = concatenate_images(load(fi2),load(fi3))
+            =#
+        else 
+            GMT.text([txt2], x=0,y=0, font=(20,:black), justify=:CM, fmt=:png, frame=:none, show=show_pics,name=fi2)
         end
 
         caption = concatenate_images(load(fi1),load(fi2))
