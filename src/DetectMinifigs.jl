@@ -265,7 +265,7 @@ function brickognize_process_file(fi,outputdir)
         @show item.type
         @show item.category
     end
-    println(score)
+    #println(score)
 
     @assert endswith(img_url,".webp")
     matchedimg = download_webp_to_image(img_url)
@@ -297,19 +297,38 @@ function add_text_to_image(img_concatenated_wo_text,txt1,txt2)
         show_pics = false
         GMT.text([txt1], x=0,y=0, font=(40,:black), justify=:CM, fmt=:png, frame=:none, show=show_pics,name=fi1)        
 
-        if occursin(" - ", txt2)
+#=
+    txtv = split(txt2," - ") 
+    txtv = vcat(split.(txtv,", ")...)
+    txtv = string.(txtv)
+    xv = zeros(Int,size(txtv,1))
+    yv = collect(1:size(txtv,1)) .* -0.006
+    GMT.text(txtv, x=xv,y=yv,N=true,justify=:CM, fmt=:png, frame=:none, show=true,name=fi2)
+=#
+    #description 
+    txtv = split(txt2," - ") 
+    txtv = vcat(split.(txtv,", ")...)
+    txtv = string.(txtv)
+    xv = zeros(Int,size(txtv,1))
+    yv = collect(1:size(txtv,1)) .* -0.006
+    GMT.text(txtv, x=xv,y=yv,N=true,justify=:CM, fmt=:png, frame=:none, show=show_pics,name=fi2)
+
+        #if occursin(" - ", txt2)
+
+            #=
             txt2a,txt2b = split(txt2," - ")
             txt2a = string(txt2a)
             txt2b = string(txt2b)
             GMT.text([txt2a,txt2b], x=[0,0],y=[0.003,-0.003],N=true,justify=:CM, fmt=:png, frame=:none, show=show_pics,name=fi2)
+            =#
             #=
                 img2a = GMT.text([txt2a], x=0,y=0, font=(20,:black), justify=:CM, fmt=:png, frame=:none, show=show_pics,name=fi2)
                 img2b = GMT.text([txt2b], x=0,y=0, font=(20,:black), justify=:CM, fmt=:png, frame=:none, show=show_pics,name=fi3)
                 img2 = concatenate_images(load(fi2),load(fi3))
             =#
-        else 
-            GMT.text([txt2], x=0,y=0, font=(20,:black), justify=:CM, fmt=:png, frame=:none, show=show_pics,name=fi2)
-        end
+        #else 
+        #    GMT.text([txt2], x=0,y=0, font=(20,:black), justify=:CM, fmt=:png, frame=:none, show=show_pics,name=fi2)
+        #end
 
         caption = concatenate_images(load(fi1),load(fi2))
         
