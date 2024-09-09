@@ -3,6 +3,7 @@ module DetectMinifigs
 using Images; using ONNXRunTime;using Genie;using Genie.Router;using Genie.Requests;using Genie.Renderer.Json; using JSON3
 using libwebp_jll
 using Downloads
+import GMT
 
 export mdl_path
 mdl_path = normpath(joinpath(@__DIR__,"..","model","yolov8x.onnx"))
@@ -215,7 +216,6 @@ function download_webp_to_image(url)
     return img
 end
 
-
 export concatenate_images
 function concatenate_images(img,matchedimg)
     h1,w1 = size(img)
@@ -255,6 +255,16 @@ function brickognize_process_file(fi,outputdir)
     item = js.items[1]
     img_url = item.img_url
     score = item.score
+    id = item.id
+    if item.type != "fig"
+        @warn("Item type is not a Minifigure!")
+        @show item.id
+        @show item.score
+        @show item.name
+        @show item.img_url
+        @show item.type
+        @show item.category
+    end
     println(score)
 
     @assert endswith(img_url,".webp")
@@ -262,10 +272,69 @@ function brickognize_process_file(fi,outputdir)
     #save(raw"C:\temp\abc.png",img)
 
     img = Images.load(fi)
-    img_concatenated = concatenate_images(img, matchedimg)
-    pt = joinpath(outputdir,"score_$(round(score*100))_$(fnonly).png")
-    save(pt,img_concatenated)    
-    return nothing 
+    img_concatenated_wo_text = concatenate_images(img, matchedimg)
+    #add text
+    img_final = add_text_to_image(img_concatenated_wo_text,item.id,item.name)
+
+    pt = joinpath(outputdir,"score_$(round(score*100))_$(id)_$(fnonly).png")
+    save(pt,img_final)
+    return item.id,item.name,score,js 
+end
+
+export add_text_to_image
+function add_text_to_image(img_concatenated_wo_text,txt1,txt2)
+    #txt1 = item.id
+    #txt2 = item.name
+    #txt = text1 * "\r\n" * text2
+    #img = img_concatenated
+
+    #craete text
+        tmpdir = mktempdir()
+        fi1 = joinpath(tmpdir,"txt1.png")
+        fi2 = joinpath(tmpdir,"txt2.png")
+        fi3 = joinpath(tmpdir,"txt3.png")
+        show_pics = false
+        img1 = GMT.text([txt1], x=0,y=0, font=(40,:black), justify=:CM, fmt=:png, frame=:none, show=show_pics,name=fi1)
+        img2 = GMT.text([txt2], x=0,y=0, font=(20,:black), justify=:CM, fmt=:png, frame=:none, show=show_pics,name=fi2)
+        if occursin(" - ", txt2)
+            txt2a,txt2b = split(txt2," - ")
+            txt2a = string(txt2a)
+            txt2b = string(txt2b)
+            img2a = GMT.text([txt2a], x=0,y=0, font=(20,:black), justify=:CM, fmt=:png, frame=:none, show=show_pics,name=fi2)
+            img2b = GMT.text([txt2b], x=0,y=0, font=(20,:black), justify=:CM, fmt=:png, frame=:none, show=show_pics,name=fi3)
+            img2 = concatenate_images(load(fi2),load(fi3))
+            save(fi2,img2)
+        end
+
+        caption = concatenate_images(load(fi1),load(fi2))
+        
+    #reduce size
+    h1,w1 = size(img_concatenated_wo_text)
+    h2,w2 = size(caption)
+    @assert w2 > w1 "error 8871 - tbd what to do otherwise (code below should still work, but might not be meaningful)"
+
+    #align width
+    #make wider image smaller
+    if w1 == w2 
+        return vcat(img_concatenated_wo_text,caption)
+    end
+    
+    new_width = min(w1,w2)
+    if new_width == w2
+        percentage_scale = w2 / w1
+        new_size = trunc.(Int, size(img_concatenated_wo_text) .* percentage_scale)
+        new_size = (new_size[1], w2) #second dim must be w2!
+        img_rescaled = imresize(img_concatenated_wo_text, new_size)
+        return vcat(img_rescaled,caption)
+    else
+        percentage_scale = w1 / w2
+        new_size = trunc.(Int, size(caption) .* percentage_scale)
+        new_size = (new_size[1], w1) #second dim must be w1!
+        img_rescaled = imresize(caption, new_size)
+        return vcat(img_concatenated_wo_text,img_rescaled)
+    end
+
+    return img
 end
 
 
