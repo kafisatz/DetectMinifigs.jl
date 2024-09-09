@@ -21,7 +21,7 @@ brickognize_folder(fldr,outputdir)
 
 
 @time brickognize_folder(fldr,outputdir)
-
+#152 seconds for 128 images
 #=
 id,name,score,js = brickognize_process_file(fi,outputdir);
 =#
