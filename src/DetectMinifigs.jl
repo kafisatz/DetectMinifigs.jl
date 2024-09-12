@@ -35,6 +35,7 @@ end
 export main 
 function main(mdl_path)    
 
+    error("do not use this function")
     download_model_if_not_exists(mdl_path)
     # handle site root. Returns index.html file content
     route("/") do 
@@ -250,6 +251,7 @@ function brickognize_process_file(fi,outputdir)
     @assert isdir(outputdir)
     #println(fi)
     fnonly = splitdir(fi)[2]
+    fnonly = splitext(fnonly)[1]
     js = brickognize(fi)
     nitems = size(js.items,1)
     item = js.items[1]
@@ -274,7 +276,8 @@ function brickognize_process_file(fi,outputdir)
     img = Images.load(fi)
     img_concatenated_wo_text = concatenate_images(img, matchedimg)
     #add text
-    img_final = add_text_to_image(img_concatenated_wo_text,item.id,item.name)
+    descr = "Score $(round(score*100))% - $(item.name)"
+    img_final = add_text_to_image(img_concatenated_wo_text,item.id,descr)
 
     pt = joinpath(outputdir,"score_$(round(score*100))_$(id)_$(fnonly).png")
     save(pt,img_final)
@@ -289,7 +292,7 @@ function add_text_to_image(img_concatenated_wo_text,txt1,txt2)
     =#
     #txt = text1 * "\r\n" * text2
 
-    #craete text
+    #create text
         tmpdir = mktempdir()
         fi1 = joinpath(tmpdir,"txt1.png")
         fi2 = joinpath(tmpdir,"txt2.png")

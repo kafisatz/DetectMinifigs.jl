@@ -16,6 +16,7 @@ js.items[1]
 #score of 50 seems OK, generally
 userhome = ENV["USERPROFILE"]
 fldr = joinpath(userhome,raw"runs\detect\predict14\crops\person")
+fldr = joinpath(userhome,raw"runs\detect\predict14\crops\p")
 @show outputdir = mktempdir(raw"C:\temp")
 brickognize_folder(fldr,outputdir)
 
